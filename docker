@@ -13,6 +13,9 @@ WORKDIR /var/www/html
 # 不给权限创建不了文件
 #RUN chmod -R 777 /var/www/html/*
 
+#配置站点配置文件
+COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
+
 #配置apache2 支持伪静态
 COPY apache2.conf /etc/apache2/apache2.conf
 RUN cp /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/rewrite.load
