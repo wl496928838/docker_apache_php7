@@ -26,14 +26,12 @@ EXPOSE 80
 # zip
 RUN apt-get update && apt-get -yqq install zip
 
-# 安装基本拓展
 RUN apt-get update && \
     apt-get install --no-install-recommends -y \
         imagemagick \
         openssh-client \
         sudo \
         git \
-        vim \
         libmemcached-dev \
         libssl-dev \
         libpng12-dev \
@@ -48,11 +46,9 @@ RUN apt-get update && \
 RUN cd /tmp/ && \
     git clone https://github.com/php-memcached-dev/php-memcached.git /usr/src/php/ext/memcached && \
     cd /usr/src/php/ext/memcached && \
-    git checkout php7
-
-
-RUN pecl install mongodb && docker-php-ext-enable mongodb
-
+    git checkout php7 && \
+    pecl install mongodb \
+    && echo "extension=mongodb.so" > $PHP_INI_DIR/conf.d/mongodb.ini
 
 RUN docker-php-ext-configure gd --with-jpeg-dir --with-png-dir --with-freetype-dir && \
 	docker-php-ext-install gd && \
@@ -65,7 +61,6 @@ RUN docker-php-ext-configure gd --with-jpeg-dir --with-png-dir --with-freetype-d
 	docker-php-ext-install mysqli && \
         a2ensite 000-default.conf && \
 	a2enmod rewrite
-
 
 
 
