@@ -62,6 +62,4 @@ RUN docker-php-ext-configure gd --with-jpeg-dir --with-png-dir --with-freetype-d
         a2ensite 000-default.conf && \
 	a2enmod rewrite
 
-
-
 RUN apt-get clean
