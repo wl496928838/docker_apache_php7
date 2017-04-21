@@ -27,26 +27,46 @@ EXPOSE 80
 RUN apt-get update && apt-get -yqq install zip
 
 # 安装基本拓展
-RUN apt-get update && apt-get install -y \
-        libfreetype6-dev \
-        libjpeg62-turbo-dev \
-        libmcrypt-dev \
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y \
+        imagemagick \
+        openssh-client \
+        sudo \
+        git \
+        vim \
+        libmemcached-dev \
+        libssl-dev \
         libpng12-dev \
-    && docker-php-ext-install iconv mcrypt \
-    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install gd
+        libjpeg-dev \
+        re2c \
+        libfreetype6-dev \
+        libmcrypt-dev \
+        libxml2-dev && \
+    rm -r /var/lib/apt/lists/*
 
 
-# 安装php扩展 pdo 必备
-RUN docker-php-ext-install pdo pdo_mysql
+RUN cd /tmp/ && \
+    git clone https://github.com/php-memcached-dev/php-memcached.git /usr/src/php/ext/memcached && \
+    cd /usr/src/php/ext/memcached && \
+    git checkout php7
 
 
-RUN pecl install mongo \
-    && docker-php-ext-enable mongo
+RUN pecl install mongodb && docker-php-ext-enable mongodb
+
+
+RUN docker-php-ext-configure gd --with-jpeg-dir --with-png-dir --with-freetype-dir && \
+	docker-php-ext-install gd && \
+	docker-php-ext-install mcrypt && \
+	docker-php-ext-install mbstring && \
+	docker-php-ext-install bcmath && \
+	docker-php-ext-install opcache && \
+	docker-php-ext-install memcached && \
+	docker-php-ext-install pdo pdo_mysql && \
+	docker-php-ext-install mysqli && \
+        a2ensite 000-default.conf && \
+	a2enmod rewrite
 
 
 
-# 装好vim好调试
-RUN apt-get -yqq install vim
 
 RUN apt-get clean
