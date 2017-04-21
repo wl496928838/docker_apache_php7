@@ -39,6 +39,7 @@ RUN apt-get update && apt-get install -y \
 
 # 安装php扩展 pdo 必备
 RUN docker-php-ext-install pdo pdo_mysql
+RUN docker-php-ext-install mongo
 
 # 装好vim好调试
 RUN apt-get -yqq install vim
