@@ -55,6 +55,7 @@ RUN docker-php-ext-configure gd --with-jpeg-dir --with-png-dir --with-freetype-d
 	docker-php-ext-install mcrypt && \
 	docker-php-ext-install mbstring && \
 	docker-php-ext-install bcmath && \
+	docker-php-ext-install opcache && \
 	docker-php-ext-install pdo pdo_mysql
 
 RUN apt-get clean
