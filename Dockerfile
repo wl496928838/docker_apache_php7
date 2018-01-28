@@ -34,10 +34,10 @@ RUN apt-get update && \
         git \
         libmemcached-dev \
         libssl-dev \
-        libpng12-dev \
+        libpng-dev \
         libjpeg-dev \
         re2c \
-        libfreetype6-dev \
+        freetype-dev \
         libmcrypt-dev \
         libxml2-dev && \
     rm -r /var/lib/apt/lists/*
