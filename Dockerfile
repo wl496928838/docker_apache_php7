@@ -39,7 +39,7 @@ RUN apt-get update && \
         re2c \
         freetype-dev \
         libmcrypt-dev \
-        libxml2-dev && \
+        libxml-dev && \
     rm -r /var/lib/apt/lists/*
 
 
