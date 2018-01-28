@@ -1,4 +1,4 @@
-FROM php:7-apache
+FROM php:7.1-apache
 
 # 设置个时区
 ENV TZ=Asia/Shanghai
@@ -34,20 +34,13 @@ RUN apt-get update && \
         git \
         libmemcached-dev \
         libssl-dev \
+        libpng12-dev \
+        libjpeg-dev \
         re2c \
+        libfreetype6-dev \
         libmcrypt-dev \
-        libxml-dev && \
+        libxml2-dev && \
     rm -r /var/lib/apt/lists/*
-
-RUN apk add --no-cache freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev && \
-  docker-php-ext-configure gd \
-    --with-gd \
-    --with-freetype-dir=/usr/include/ \
-    --with-png-dir=/usr/include/ \
-    --with-jpeg-dir=/usr/include/ && \
-  NPROC=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1) && \
-  docker-php-ext-install -j${NPROC} gd && \
-  apk del --no-cache freetype-dev libpng-dev libjpeg-turbo-dev
 
 
 RUN cd /tmp/ && \
@@ -62,7 +55,6 @@ RUN docker-php-ext-configure gd --with-jpeg-dir --with-png-dir --with-freetype-d
 	docker-php-ext-install mcrypt && \
 	docker-php-ext-install mbstring && \
 	docker-php-ext-install bcmath && \
-	docker-php-ext-install opcache && \
 	docker-php-ext-install pdo pdo_mysql
 
 RUN apt-get clean
