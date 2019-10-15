@@ -23,38 +23,27 @@ RUN cp /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/rewrit
 # 开放端口
 EXPOSE 80
 
-# zip
-RUN apt-get update && apt-get -yqq install zip
 
-RUN apt-get update && \
-    apt-get install --no-install-recommends -y \
-        imagemagick \
-        openssh-client \
-        sudo \
-        git \
-        libmemcached-dev \
-        libssl-dev \
-        libpng-dev \
-        libjpeg-dev \
-        re2c \
-        libfreetype6-dev \
-        libmcrypt-dev \
-        libxml2-dev && \
-    rm -r /var/lib/apt/lists/*
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - \
+    && apt-get install -y \
+    cron \
+    icu-devtools \
+    libfreetype6-dev libicu-dev libjpeg62-turbo-dev libpng-dev libsasl2-dev libssl-dev libwebp-dev libxpm-dev libzip-dev \
+    nodejs \
+    unzip \
+    zlib1g-dev
+RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini \
+    && yes '' | pecl install redis \
+    && docker-php-ext-configure gd --with-freetype-dir --with-gd --with-jpeg-dir --with-png-dir --with-webp-dir --with-xpm-dir --with-zlib-dir \
+    && docker-php-ext-install gd intl pdo_mysql zip \
+    && docker-php-ext-enable opcache redis
+RUN apt-get clean \
+    && apt-get autoclean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    
+  
+CMD ["docker-laravel-entrypoint"]
 
-
-RUN cd /tmp/ && \
-    git clone https://github.com/php-memcached-dev/php-memcached.git /usr/src/php/ext/memcached && \
-    cd /usr/src/php/ext/memcached && \
-    git checkout php7 && \
-    pecl install mongodb \
-    && echo "extension=mongodb.so" > $PHP_INI_DIR/conf.d/mongodb.ini
-
-RUN docker-php-ext-configure gd --with-jpeg-dir --with-png-dir --with-freetype-dir && \
-	docker-php-ext-install gd && \
-	docker-php-ext-install mcrypt && \
-	docker-php-ext-install mbstring && \
-	docker-php-ext-install bcmath && \
-	docker-php-ext-install pdo pdo_mysql && \
-	docker-php-ext-install opcache
-RUN apt-get clean
+    
+    
