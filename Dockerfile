@@ -39,9 +39,8 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - \
     zlib1g-dev
 RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini \
     && yes '' | pecl install redis \
-	 && pecl install pcnti \
     && docker-php-ext-configure gd --with-freetype-dir --with-gd --with-jpeg-dir --with-png-dir --with-webp-dir --with-xpm-dir --with-zlib-dir \
-    && docker-php-ext-install gd intl pdo_mysql zip \
+    && docker-php-ext-install gd intl pdo_mysql zip pcntl \
     && docker-php-ext-enable opcache redis
 
 RUN  pecl install mongodb \
